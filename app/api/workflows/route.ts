@@ -11,7 +11,7 @@ type InitialData = {
   fullName: string
 }
 
-const ONE_DAY = 24 * 60 * 60
+const ONE_DAY = 24 * 60 * 60 * 1000
 const THREE_DAYS = ONE_DAY * 3
 const ONE_MONTH = THREE_DAYS * 10
 

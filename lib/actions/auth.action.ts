@@ -59,7 +59,7 @@ export const signUp = async (params: User) => {
         })
         console.log(workflowRunId)
 
-        signInWithCredentials({email, password})
+        await signInWithCredentials({email, password})
 
         return { success: true };
     } catch (error) {
