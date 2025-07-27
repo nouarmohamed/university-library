@@ -22,10 +22,10 @@ const layout = async ({ children }: { children: ReactNode }) => {
   })
 
   return (
-    <main className='max-w-7xl'>
+    <main className='pattern text-light-100 min-h-screen'>
       <div className='max-w-7xl px-4 sm:px-10 md:px-16'>
         <NavBar session={session} />
-        <div className="mt-20 pb-20">{children}</div>
+        <div className="pb-20">{children}</div>
       </div>
     </main>
   )

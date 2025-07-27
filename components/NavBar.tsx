@@ -10,7 +10,6 @@ import { cn, getInitials } from "@/lib/utils"
 import { usePathname } from "next/navigation"
 import { signOutAction } from "@/lib/actions/auth.action";
 
-
 const NavBar = ({session}: {session: Session | null}) => {
     const { user } = session || {}
 
@@ -18,32 +17,32 @@ const NavBar = ({session}: {session: Session | null}) => {
 
     return (
         <nav className="flex flex-row justify-between items-center py-10">
-            <div className="flex flex-row items-center gap-3">
+            <Link href={'/'} className="flex flex-row items-center gap-3">
                 <Image src="/icons/logo.svg" alt="Logo" width={40} height={40} />
                 <h1 className="text-2xl font-bold text-white">BookWise</h1>
-            </div>
-            <ul className="flex flex-row items-center gap-6">
-                {navigationLinks.map((link) => (
-                    <li key={link.href} className={cn(pathname === link.href && "text-primary-100")}>
-                        <Link href={link.href}>{link.label}</Link>
+            </Link>
+            <div className="flex">
+                <ul className="flex flex-row items-center gap-6">
+                    {navigationLinks.map((link) => (
+                        <li key={link.href} className={cn(pathname === link.href && "text-primary-100")}>
+                            <Link href={link.href}>{link.label}</Link>
+                        </li>
+                    ))}
+                    <li className="flex items-center">
+                        {user && (
+                            <Link href="/my-profile" className="flex-center gap-1">
+                                <Avatar>
+                                    <AvatarFallback>{user.name ? getInitials(user.name) : "CN"}</AvatarFallback>
+                                </Avatar>
+                                <span>{user.name}</span>
+                            </Link>
+                        )}
                     </li>
-                ))}
-                <li className="flex items-center gap-2">
-                    {user && (
-                        <Link href="/my-profile" className="flex-center gap-0.5">
-                            <Avatar>
-                                <AvatarFallback>{user.name ? getInitials(user.name) : "CN"}</AvatarFallback>
-                            </Avatar>
-                            <span>{user.name}</span>
-                        </Link>
-                    )}
-                </li>
-                <li>
-                    <Button className="cursor-pointer" type="button" onClick={() => signOutAction()}>
-                        <Image src="/icons/logout.svg" alt="User Icon" width={24} height={24}/>
-                    </Button>
-                </li>
-            </ul>
+                </ul>
+                <Button className="cursor-pointer bg-transparent" type="button" onClick={() => signOutAction()}>
+                    <Image src="/icons/logout.svg" alt="User Icon" width={24} height={24}/>
+                </Button>
+            </div>
         </nav>
     )
 }

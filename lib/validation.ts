@@ -12,3 +12,14 @@ export const signInSchema = z.object({
   email: z.string().email(),
   password: z.string().min(8).max(100),
 })
+
+export const bookSchema = z.object({
+  title: z.string().nonempty(),
+  author: z.string().min(8).max(100),
+  genre: z.string(),
+  totalCopies: z.coerce.number().int(),
+  coverUrl: z.string(),
+  coverColor: z.string(),
+  videoUrl: z.string(),
+  summary: z.string().min(10).max(1000),
+})

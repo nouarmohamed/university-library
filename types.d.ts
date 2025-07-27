@@ -4,19 +4,29 @@ interface User {
   fullName: string;
   universityId: number;
   universityCard: string;
+  role: "USER" | "ADMIN";
+  createdAt?: Date | null;
+  id: string;
 }
 
 interface BOOK {
-    id: number;
+    id: string;
     title: string;
     author: string;
     genre: string;
     rating: number;
-    total_copies: number;
-    available_copies: number;
-    description: string;
-    color: string;
-    cover: string;
-    video: string;
+    totalCopies: number;
+    availableCopies?: number;
+    description?: string;
+    coverColor: string;
+    coverUrl: string;
+    videoUrl: string;
     summary: string;
+    createdAt?: Date | null ;
+    status?: string;
+}
+
+interface BorrowBookParams {
+  bookId: string;
+  userId: string;
 }

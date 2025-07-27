@@ -1,0 +1,14 @@
+@import "tailwindcss";
+
+@layer components {
+    .admin-primary-btn {
+        @apply bg-white 
+    }
+    .book-form-input {
+        @apply !bg-white min-h-14 p-4 text-base focus:border-transparent focus:ring-0 placeholder:font-normal placeholder:text-slate-500
+    }
+    .book-form-label {
+        @apply text-slate-900 pl-0.5
+    }
+    
+}

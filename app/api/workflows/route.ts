@@ -11,7 +11,7 @@ type InitialData = {
   fullName: string
 }
 
-const ONE_DAY = 24 * 60 * 60 * 1000
+const ONE_DAY = 24 * 60 * 60
 const THREE_DAYS = ONE_DAY * 3
 const ONE_MONTH = THREE_DAYS * 10
 
@@ -36,6 +36,16 @@ export const { POST } = serve<InitialData>(async (context) => {
       email,
       subject: `Welcome to the University Library ${fullName}`,
       message: "You're all set. Start exploring books and resources now."
+    })
+  })
+
+  await context.sleepUntil("wait-for-5-seconds", Date.now() / 1000 + 3)
+  
+  await context.run("new-signup", async () => {
+    await sendEmail({
+      email,
+      subject: `hi ${fullName}`,
+      message: "how are you"
     })
   })
 

@@ -1,12 +1,32 @@
 import Image from "next/image"
-import { Button } from "./ui/button"
 import BookCover from "./BookCover"
+import BorrowButton from "./BorrowButton"
+import { db } from "@/database/drizzle"
+import { users } from "@/database/schema"
+import { eq } from "drizzle-orm"
 
-const BookOverview = ({id, title, author, genre, rating, total_copies, available_copies, description, color, cover, video, summary,}: BOOK) => {
+interface Props extends BOOK {
+  userId: string
+}
+const BookOverview = async ({id, title, author, genre, rating, totalCopies, availableCopies, description, coverColor, coverUrl, userId}: Props) => {
+  const user = await db
+    .select()
+    .from(users)
+    .where(eq(users.id, userId))
+    .limit(1);
+
+  const borrowingEligibility = {
+    isEligible: availableCopies! > 0 && user[0]?.status === "APPROVED",
+    message:
+      availableCopies! <= 0
+        ? "Book is not available"
+        : "You are not eligible to borrow this book",
+  };
+
   return (
     <main className="flex flex-col-reverse sm:flex-row">
       <section className="flex flex-col ">
-        <h1 className="text-5xl text-white font-semibold">{title}</h1>
+        <h1 className="text-5xl text-white font-semibold max-w-xl">{title}</h1>
         <div className="flex flex-col gap-6 mt-8">
           <div className="flex flex-row items-center gap-4">
             <p>By <span>{author}</span></p>
@@ -17,16 +37,13 @@ const BookOverview = ({id, title, author, genre, rating, total_copies, available
             </div>
           </div>
           <div className="flex flex-row items-center gap-4">
-            <p>Total books: <span>{total_copies}</span></p>
-            <p>Available books: <span>{available_copies}</span></p>
+            <p>Total books: <span>{totalCopies}</span></p>
+            <p>Available books: <span>{availableCopies}</span></p>
           </div>
           <div>
             <p className="max-w-lg">{description}</p>
           </div>
-          <Button className="flex bg-primary-100 text-dark-100 font-semibold rounded-sm w-min py-5 px-10 hover:bg-primary-100/80">
-            <Image src={"/icons/book.svg"} alt={"book"} width={20} height={20} />
-            <p className="font-bebas-neue text-lg">Borrow Book Request</p>
-          </Button>
+          <BorrowButton userId={userId} bookId={id!} borrowingEligibility={borrowingEligibility}/>
         </div>
       </section>
       <section className="relative flex flex-1 justify-center">
@@ -34,15 +51,15 @@ const BookOverview = ({id, title, author, genre, rating, total_copies, available
           <BookCover
             variant="wide"
             className="z-10"
-            color={color}
-            cover={cover}
+            color={coverColor}
+            cover={coverUrl}
           />
 
           <div className="absolute left-16 top-10 rotate-12 opacity-40 max-sm:hidden">
             <BookCover
               variant="wide"
-              color={color}
-              cover={cover}
+              color={coverColor}
+              cover={coverUrl}
             />
           </div>
         </div>

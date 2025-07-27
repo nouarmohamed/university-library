@@ -1,16 +1,16 @@
-import { sampleBooks } from '@/constants'
-import React from 'react'
 import BookCard from './BookCard'
 
 interface Props {
     title: string
+    books: BOOK[]
+    query?: string
 }
-const BookList = ({title}: Props) => {
+const BookList = ({title, books, query}: Props) => {
   return (
     <section className='flex flex-col gap-10 mt-10'>
-        <h2 className='text-2xl font-semibold'>{title}</h2>
-        <div className='flex flex-row flex-wrap gap-14'>
-            {sampleBooks.map((book) => (
+        <h2 className='text-2xl font-semibold'>{title} <span className='text-primary-100'>{query}</span></h2>
+        <div className='flex flex-row flex-wrap gap-10'>
+            {books.map((book) => (
                 <BookCard {...book} key={book.id}/>
             ))}
         </div>

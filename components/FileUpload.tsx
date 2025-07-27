@@ -12,12 +12,15 @@ import {
 import { useRef, useState } from "react";
 import { Button } from "./ui/button";
 import config from "@/lib/config";
+import { cn } from "@/lib/utils";
 
 interface FileUploadProps {
   onFileChange: (filePath: string) => void;
+  fileType: 'image' | 'video';
+  formType: 'auth' | 'book';
 }
 
-const FileUpload = ({ onFileChange }: FileUploadProps) => {
+const FileUpload = ({ onFileChange, fileType, formType }: FileUploadProps) => {
   const [progress, setProgress] = useState(0);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -25,6 +28,8 @@ const FileUpload = ({ onFileChange }: FileUploadProps) => {
   const abortController = new AbortController();
 
   const [uploadedUrl, setUploadedUrl] = useState("");
+
+  const folder = fileType === 'image'? '/images/ids' : '/videos/trailers'
 
   const authenticator = async () => {
     try {
@@ -64,6 +69,7 @@ const FileUpload = ({ onFileChange }: FileUploadProps) => {
                 publicKey,
                 file,
                 fileName: file.name,
+                folder: folder,
                 onProgress: (event) => {
                     setProgress((event.loaded / event.total) * 100);
                 },
@@ -92,30 +98,33 @@ const FileUpload = ({ onFileChange }: FileUploadProps) => {
   return (
     <ImageKitProvider urlEndpoint={config.env.imageKit.endpointUrl}>
       <input
-        type="file"
+        type={'file'}
         ref={fileInputRef}
         onChange={handleFileChange}
         className="hidden"
       />
-      <Button className="upload-btn" type="button" onClick={() => fileInputRef.current?.click()}>
+      <Button className={cn(formType === 'auth' ? 'dark-upload-btn' : 'light-upload-btn')} type="button" onClick={() => fileInputRef.current?.click()}>
         <img src="/icons/upload.svg" alt="Upload File" />
-        <p className="text-light-100">Upload your ID</p>
+        <p>{formType === 'auth' ? 'Upload your ID' : (fileType === 'image' ? 'Upload book cover' : 'Upload book trailer')}</p>
       </Button>
 
-      <div className="w-full h-40 sm:h-76 border border-light-100">
-        {uploadedUrl && (
-          <Image
-            src={uploadedUrl}
-            width={500}
-            height={300}
-            alt="Uploaded image"
-            className="w-full h-full object-cover size-fit"
-          />
-        )}
-      </div>
-
-      <br />
-      <progress value={progress} max={100} className="w-full"/>
+      { formType === 'auth' && 
+        <>
+          <div className="w-full h-40 sm:h-76 border border-light-100">
+            {uploadedUrl && (
+              <Image
+                src={uploadedUrl}
+                width={500}
+                height={300}
+                alt="Uploaded image"
+                className="w-full h-full object-cover size-fit"
+              />
+            )}
+          </div>
+          <br />
+          <progress value={progress} max={100} className="w-full"/>
+        </>
+      }
     </ImageKitProvider>
   );
 }

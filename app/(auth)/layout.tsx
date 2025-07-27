@@ -9,7 +9,7 @@ const layout = async ({ children }: { children: ReactNode }) => {
   if (session) redirect("/");
   return (
     <main className='flex flex-col-reverse sm:flex-row relative text-light-100'>
-        <section className='flex-center my-auto h-full min-h-screen flex-1 flex-col gap-6 px-5 py-10'>
+        <section className='pattern flex-center my-auto h-full min-h-screen flex-1 flex-col gap-6 px-5 py-10'>
           <div className='form-gradient mx-auto flex max-w-xl flex-col gap-6 rounded-lg p-10'>
             <div className='flex flex-row gap-3'>
               <Image
